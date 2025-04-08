@@ -1,0 +1,2 @@
+# BlazeBeats
+AI Music Player
