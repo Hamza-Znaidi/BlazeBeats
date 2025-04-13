@@ -1,0 +1,433 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+    %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Spotify Clone - Home</title>
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+    
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #121212;
+          color: #fff;
+          overflow-x: hidden;
+        }
+    
+        .container {
+          display: flex;
+          min-height: 100vh;
+        }
+    
+        /* Sidebar */
+        .sidebar {
+          width: 240px;
+          background-color: #000;
+          padding: 20px;
+          position: fixed;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          z-index: 100;
+        }
+    
+        .logo {
+          font-size: 24px;
+          font-weight: bold;
+          color: #1db954;
+        }
+    
+        .sidebar ul {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+    
+        .sidebar li {
+          padding: 12px;
+          cursor: pointer;
+          border-radius: 4px;
+          font-size: 16px;
+          transition: background-color 0.2s;
+        }
+        
+    
+        .sidebar li.active,
+        .sidebar li:hover {
+          background-color: #282828;
+          color: #1db954;
+        }
+        
+        
+    
+        /* Main Content */
+        .main {
+          flex: 1;
+          margin-left: 240px;
+          padding: 20px;
+          background-color: #121212;
+          min-height: calc(100vh - 90px);
+        }
+    
+        h1 {
+          font-size: 24px;
+          margin-bottom: 20px;
+        }
+    
+        .song-list {
+          display: grid;
+          gap: 10px;
+        }
+    
+        .song {
+          display: flex;
+          align-items: center;
+          padding: 10px;
+          background-color: #181818;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background-color 0.2s;
+        }
+    
+        .song:hover {
+          background-color: #282828;
+        }
+    
+        .song img {
+          width: 50px;
+          height: 50px;
+          object-fit: cover;
+          margin-right: 10px;
+          border-radius: 4px;
+        }
+    
+        .song-info {
+          flex: 1;
+        }
+    
+        .song-title {
+          font-size: 16px;
+        }
+    
+        .song-artist {
+          font-size: 14px;
+          color: #b3b3b3;
+        }
+    
+        /* Player */
+        .player {
+          position: fixed;
+          bottom: 0;
+          left: 240px;
+          right: 0;
+          height: 90px;
+          background-color: #181818;
+          border-top: 1px solid #282828;
+          display: flex;
+          align-items: center;
+          padding: 0 20px;
+          gap: 20px;
+          z-index: 99;
+        }
+    
+        .player-info {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+    
+        .player-info img {
+          width: 50px;
+          height: 50px;
+          object-fit: cover;
+          border-radius: 4px;
+        }
+    
+        .player-details {
+          display: flex;
+          flex-direction: column;
+        }
+    
+        .player-controls {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+        }
+    
+        .play-pause-btn {
+          background-color: #1db954;
+          border: none;
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 20px;
+          color: #fff;
+          transition: background-color 0.2s;
+        }
+    
+        .play-pause-btn:hover {
+          background-color: #1ed760;
+        }
+    
+        .progress-container {
+          flex: 2;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+    
+        .progress-bar {
+          flex: 1;
+          height: 4px;
+          background-color: #404040;
+          border-radius: 2px;
+          overflow: hidden;
+          cursor: pointer;
+        }
+    
+        .progress {
+          width: 0;
+          height: 100%;
+          background-color: #1db954;
+          transition: width 0.1s linear;
+        }
+    
+        .time {
+          font-size: 12px;
+          color: #b3b3b3;
+        }
+    
+        @media (max-width: 768px) {
+          .sidebar {
+            width: 100%;
+            height: auto;
+            flex-direction: row;
+            justify-content: space-around;
+            bottom: auto;
+          }
+    
+          .main {
+            margin-left: 0;
+            margin-top: 60px;
+          }
+    
+          .player {
+            left: 0;
+            height: 80px;
+          }
+    
+          .progress-container {
+            display: none;
+          }
+        }
+        
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+          <div class="logo">Spotify Clone</div>
+          <ul>
+            <li class="active" data-section="home">Home</li>
+            <li data-section="search">Search</li>
+            <li data-section="library">Your Library</li>
+            <li><a  id="logout" href="/logout">Logout</a></li>
+          </ul>
+        </nav>
+    
+        <!-- Main Content -->
+        <main class="main" id="main-content">
+          <!-- Content populated by JavaScript -->
+          
+        </main>
+    
+        <!-- Audio Player -->
+        <div class="player">
+          <div class="player-info">
+            <img id="player-img" src="https://via.placeholder.com/50" alt="Song">
+            <div class="player-details">
+              <span id="current-song">Select a song</span>
+              <span id="current-artist" style="font-size: 12px; color: #b3b3b3;"></span>
+            </div>
+          </div>
+          <div class="player-controls">
+            <button class="play-pause-btn" id="play-pause-btn">▶</button>
+          </div>
+          <div class="progress-container">
+            <span class="time" id="current-time">0:00</span>
+            <div class="progress-bar" id="progress-bar">
+              <div class="progress" id="progress"></div>
+            </div>
+            <span class="time" id="duration">0:00</span>
+          </div>
+          <audio id="audio-player">
+            <source src="" type="audio/mpeg">
+          </audio>
+        </div>
+      </div>
+    
+      <script>
+        // Sample song data
+        const songs = [
+          {
+            id: 1,
+            title: "Song One",
+            artist: "Artist A",
+            img: "https://via.placeholder.com/50",
+            src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+          },
+          {
+            id: 2,
+            title: "Song Two",
+            artist: "Artist B",
+            img: "https://via.placeholder.com/50",
+            src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+          },
+          {
+            id: 3,
+            title: "Song Three",
+            artist: "Artist C",
+            img: "https://via.placeholder.com/50",
+            src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+          },
+        ];
+    
+        // DOM elements
+        const mainContent = document.getElementById("main-content");
+        const sidebarItems = document.querySelectorAll(".sidebar li");
+        const audioPlayer = document.getElementById("audio-player");
+        const playPauseBtn = document.getElementById("play-pause-btn");
+        const currentSongDisplay = document.getElementById("current-song");
+        const currentArtistDisplay = document.getElementById("current-artist");
+        const playerImg = document.getElementById("player-img");
+        const progressBar = document.getElementById("progress-bar");
+        const progress = document.getElementById("progress");
+        const currentTimeDisplay = document.getElementById("current-time");
+        const durationDisplay = document.getElementById("duration");
+    
+        // Render sections
+        function renderHome() {
+          mainContent.innerHTML = `
+            <h1>Featured Songs</h1>
+            <div class="song-list"></div>
+          `;
+          const songList = mainContent.querySelector(".song-list");
+          songs.forEach((song) => {
+            const songDiv = document.createElement("div");
+            songDiv.classList.add("song");
+            songDiv.innerHTML = `
+              <img src="${song.img}" alt="${song.title}">
+              <div class="song-info">
+                <div class="song-title">${song.title}</div>
+                <div class="song-artist">${song.artist}</div>
+              </div>
+            `;
+            songDiv.addEventListener("click", () => playSong(song));
+            songList.appendChild(songDiv);
+          });
+        }
+    
+        function renderSearch() {
+          mainContent.innerHTML = `
+            <h1>Search</h1>
+            <p>Search functionality coming soon...</p>
+          `;
+        }
+    
+        function renderLibrary() {
+          mainContent.innerHTML = `
+            <h1>Your Library</h1>
+            <p>Your playlists and saved songs will appear here.</p>
+          `;
+        }
+    
+        // Sidebar navigation
+        sidebarItems.forEach((item) => {
+          item.addEventListener("click", () => {
+            sidebarItems.forEach((i) => i.classList.remove("active"));
+            item.classList.add("active");
+            const section = item.dataset.section;
+            if (section === "home") renderHome();
+            else if (section === "search") renderSearch();
+            else if (section === "library") renderLibrary();
+          });
+        });
+    
+        // Initialize with Home
+        renderHome();
+    
+        // Audio player functionality
+        let isPlaying = false;
+    
+        function playSong(song) {
+          currentSongDisplay.textContent = song.title;
+          currentArtistDisplay.textContent = song.artist;
+          playerImg.src = song.img;
+          audioPlayer.src = song.src;
+          audioPlayer.play();
+          isPlaying = true;
+          playPauseBtn.textContent = "⏸";
+        }
+    
+        playPauseBtn.addEventListener("click", () => {
+          if (isPlaying) {
+            audioPlayer.pause();
+            playPauseBtn.textContent = "▶";
+          } else {
+            audioPlayer.play();
+            playPauseBtn.textContent = "⏸";
+          }
+          isPlaying = !isPlaying;
+        });
+    
+        // Progress bar and time updates
+        audioPlayer.addEventListener("timeupdate", () => {
+          const currentTime = audioPlayer.currentTime;
+          const duration = audioPlayer.duration || 0;
+          const progressPercent = (currentTime / duration) * 100;
+          progress.style.width = `${progressPercent}%`;
+    
+          // Update time displays
+          currentTimeDisplay.textContent = formatTime(currentTime);
+          durationDisplay.textContent = formatTime(duration);
+        });
+    
+        function formatTime(seconds) {
+          const mins = Math.floor(seconds / 60);
+          const secs = Math.floor(seconds % 60);
+          return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+        }
+    
+        // Seek functionality
+        progressBar.addEventListener("click", (e) => {
+          const rect = progressBar.getBoundingClientRect();
+          const offsetX = e.clientX - rect.left;
+          const percent = offsetX / rect.width;
+          audioPlayer.currentTime = percent * audioPlayer.duration;
+        });
+    
+        // Update duration when metadata is loaded
+        audioPlayer.addEventListener("loadedmetadata", () => {
+          durationDisplay.textContent = formatTime(audioPlayer.duration);
+        });
+      </script>
+    </body>
+    </html>
+    {% endblock %}
+    
